@@ -9,20 +9,15 @@ function Start () {
 	
 }
 
-function Awake()
-  {
-       rotation = transform.rotation;
-  }
-function LateUpdate()
-  {
-        transform.rotation = rotation;
-  }
-
 function Update () {
+
+    rotation = transform.rotation;
 	yaw += speedH * Input.GetAxis("Mouse X");
     pitch -= speedV * Input.GetAxis("Mouse Y");
 	Debug.Log(transform.rotation);
 	if(Player.onGround){
 		transform.eulerAngles = new Vector3(0, yaw, 0.0f);
 	}
+	if(!Player.onGround)
+		transform.rotation = Player.preRotation;
 }

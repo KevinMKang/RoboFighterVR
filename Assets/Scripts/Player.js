@@ -7,6 +7,9 @@ var pitch = 0.0f;
 
 var ms = 0.1;
 
+var boostS = 0.4;
+var boostDashing = false;
+
 var speed = 0f;
 var accel = 1f;
 var maxSpeed = 1f;
@@ -29,12 +32,21 @@ var airMomentum = 0;
 var controls = new Array();
 controls.push(119);controls.push(115);controls.push(100);controls.push(97);
 
+static var preRotation;
+
+var rb : Rigidbody;
+
+var ButtonCooldown : float = 0.5;
+var ButtonCount : int = 0; 	
+	 
 
 function Start () {
+	rb = GetComponent.<Rigidbody>();
 	InvokeRepeating("drainBoost",0.0f,0.5f);
 }
 
 function Update () {
+	rb.useGravity = true;
 	
 	if(!landed){
 		if(onGround){
@@ -43,10 +55,11 @@ function Update () {
 		}
 		yMove = 0.0f;
 		
-		if(Input.GetKey(32) && boostMeter>0){		
-			yMove+=speed;
-			if(speed < maxSpeed)
-				speed+=accel;
+		if(Input.GetKey(32) && boostMeter>0 && !boostDashing){		
+			yMove+=maxSpeed;
+			rb.useGravity = false;
+			//if(speed < maxSpeed)
+				//speed+=accel;
 		}
 		
 		for(var i=0;i<controls.length;i++){
@@ -54,10 +67,12 @@ function Update () {
 			if((Input.GetKey(key) && (onGround))){
 				airMomentum = i;
 				premoved=true;
+				preRotation = transform.rotation;
+				var moveSpeed = (boostDashing) ? boostS : ms;
 				if(i<2){					
-					transform.position += transform.forward * ((i%2==0) ?  ms : -ms);
+					transform.position += transform.forward * ((i%2==0) ?  moveSpeed : -moveSpeed);
 				}else{
-					transform.position += transform.right * ((i%2==0) ?  ms : -ms);
+					transform.position += transform.right * ((i%2==0) ?  moveSpeed : -moveSpeed);
 				}
 			}
 		}
@@ -114,4 +129,22 @@ function Update () {
  function drainBoost(){
 	 if(!onGround)
 		 boostMeter-=1;	 
+ }
+ 
+ function doBoost(){
+	 if(Input.GetKeyDown(32)){
+		if(ButtonCooldown > 0 && ButtonCount == 1){
+			if(boostMeter > 0){
+				boostMeter-=1;
+				yMove = 0.0f;
+				boostDashing = true;
+				
+			}
+		}
+	 }else{
+		 ButtonCooldown = 0.5;
+		 ButtonCount += 1;
+		 boostDashing = false;
+	 }	 
+
  }
