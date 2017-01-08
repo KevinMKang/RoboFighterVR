@@ -51,14 +51,13 @@ function Update () {
 		
 		for(var i=0;i<controls.length;i++){
 			var key : int = controls[i];
-			if((Input.GetKey(key) && onGround)){
+			if((Input.GetKey(key) && (onGround))){
 				airMomentum = i;
+				premoved=true;
 				if(i<2){					
 					transform.position += transform.forward * ((i%2==0) ?  ms : -ms);
-					premoved = true;
 				}else{
 					transform.position += transform.right * ((i%2==0) ?  ms : -ms);
-					premoved = true;
 				}
 			}
 		}
