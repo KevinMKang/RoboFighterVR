@@ -59,9 +59,10 @@ function Update () {
 	Debug.Log("Main Player: " +transform.rotation);
 	Debug.Log("onGround: "+ onGround);
 	position = transform.position;
-	
-	if(!boostDashing || (boostMeter <= 0))
+	Debug.Log("Gravity? " + rb.useGravity);
+	if((!boostDashing)){
 		rb.useGravity = true;
+	}
 	
 	if(!landed){
 		if(onGround){
@@ -160,7 +161,7 @@ function Update () {
  }
  
  function drainBoost(){
-	 if(!onGround)
+	 if(!onGround && Input.GetKey(32))
 		 boostMeter-=1;	 
  }
  
