@@ -14,10 +14,11 @@ function Update () {
     rotation = transform.rotation;
 	yaw += speedH * Input.GetAxis("Mouse X");
     pitch -= speedV * Input.GetAxis("Mouse Y");
-	Debug.Log(transform.rotation);
-	if(Player.onGround){
-		transform.eulerAngles = new Vector3(0, yaw, 0.0f);
-	}
+	
+	transform.eulerAngles = new Vector3(0, yaw, 0.0f);
+	Debug.Log("Preserver: " +transform.rotation);
 	if(!Player.onGround)
 		transform.rotation = Player.preRotation;
+	
+	Debug.Log("Preserver: " +transform.rotation);
 }
